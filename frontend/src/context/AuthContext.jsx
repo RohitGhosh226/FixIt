@@ -1,5 +1,5 @@
 import { createContext, useContext,useEffect,useState } from "react";
-import api, { setAccessToken as setApiAccesstoken } from "../services/api";
+import api, { setAccessToken as setApiAccessToken } from "../services/api";
 
 const AuthContext = createContext();
 
@@ -22,7 +22,7 @@ const [loading, setLoading] = useState(true);
   } finally {
     setUser(null);
     setAccessToken(null);
-    setApiAccesstoken(null);
+    setApiAccessToken(null);
   }
 };
   useEffect(() => {
@@ -30,7 +30,10 @@ const [loading, setLoading] = useState(true);
     try {
       const response = await api.post("/auth/refresh");
 
-      setAccessToken(response.data.accessToken);
+      const newAccessToken = response.data.accessToken;
+
+setAccessToken(newAccessToken);
+setApiAccessToken(newAccessToken);
 
       // Fetch the logged-in user's information
       const userResponse = await api.get("/users/me", {
@@ -44,6 +47,7 @@ const [loading, setLoading] = useState(true);
       console.log("No active session");
       setUser(null);
       setAccessToken(null);
+      setApiAccessToken(null);
     } finally {
       setLoading(false);
     }
